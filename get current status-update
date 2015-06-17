@@ -1,6 +1,6 @@
 ######################################################
 ##get selected vm's,  and export current tools version
-##
+##also upgardes
 ######################################################
 $vmConfigSpec = New-Object VMware.Vim.VirtualMachineConfigSpec
 $vmConfigSpec.Tools = New-Object VMware.Vim.ToolsConfigInfo
@@ -20,3 +20,6 @@ $results += $row
 
 $results | -path "toolsversion.txt" -notypeinformation
 
+########################################
+###enables the upgrade
+$vms | %{ $_.Extensiondata.ReconfigVM($vmConfigSpec)}
