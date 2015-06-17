@@ -1,0 +1,45 @@
+##################################
+### counts the number of updated vm
+### the number of vm's that have the updated tools version
+### can compare the status before and after
+$count = Get-Content .\tools.txt | Select-String -Pattern "9349"
+
+
+
+####################################
+### filtering unwanted vm's from our list
+### for example citrix
+### using function that gets 2 params, 1 a vm and the other a list of vms 
+### returns $true if parm1 is in param2
+Function isinlist 
+{
+param ($vmtolook,$listofvms)
+ 
+foreach ($vminlist in $listofvms)
+{
+if ($vminlist.name -eq $vmtolook.name)
+{
+return $true
+}
+}
+return $false
+}
+
+##################################
+### using the above function
+### ending up with a new list of vm's that do not include 
+### the vms in $exclude
+$vmsnoctx = @()
+foreach ($vm in $vms)
+{
+if (isinlist $vm $exclude)
+{
+$vm.Name
+}
+else
+{
+$vmsnoctx += $vm
+}
+}
+
+
