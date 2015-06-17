@@ -1,0 +1,22 @@
+######################################################
+##get selected vm's,  and export current tools version
+##
+######################################################
+$vmConfigSpec = New-Object VMware.Vim.VirtualMachineConfigSpec
+$vmConfigSpec.Tools = New-Object VMware.Vim.ToolsConfigInfo
+$vmConfigSpec.Tools.ToolsUpgradePolicy = "UpgradeAtPowerCycle"
+
+$vms = Get-Folder -name 'windows' | get-vm
+
+########### export current tools version
+$results = @()
+foreach ($vm in $vms)
+{
+$row = new-object psobject
+Add-Member -InputObject $row -MemberType noteproperty -Name "vm" -Value $vm.name 
+Add-Member -InputObject $row -MemberType noteproperty -Name "vmtoolsverion" -Value $vm.ExtensionData.Config.Tools.ToolsVersion
+$results += $row
+}
+
+$results | -path "toolsversion.txt" -notypeinformation
+
